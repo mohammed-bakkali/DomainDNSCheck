@@ -1,9 +1,8 @@
 # DomainDNSCheck
-Here's a suggestion for your GitHub repository description:
-
 ---
 
-**DNSInspect**  
+**DomainDNSCheck** 
+
 _A Python tool to inspect DNS records for domains, including SPF, MX, and AAAA records, with automated categorization and detailed reporting._  
 
 **Features:**  

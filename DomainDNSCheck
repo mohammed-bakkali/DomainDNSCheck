@@ -1,0 +1,128 @@
+import dns.resolver # type: ignore
+import sys
+
+def check_spf(domain):
+    try:
+        # Check SPF record (TXT)
+        answers = dns.resolver.resolve(domain, "TXT")
+        spf_records = [rdata.to_text() for rdata in answers if "v=spf1" in rdata.to_text()]
+        if spf_records:
+            return spf_records
+        else:
+            return None
+    except dns.resolver.NoAnswer:
+        return None
+    except dns.resolver.NXDOMAIN:
+        return f"Domain does not exist: {domain}"
+    except Exception as e:
+        return f"Error checking SPF for {domain}: {e}"
+
+def check_mx(domain):
+    try:
+        # Check MX records
+        answers = dns.resolver.resolve(domain, "MX")
+        mx_records = [rdata.exchange.to_text() for rdata in answers]
+        return f"MX records: {mx_records}"
+    except dns.resolver.NoAnswer:
+        return "No MX records found"
+    except dns.resolver.NXDOMAIN:
+        return f"Domain does not exist: {domain}"
+    except Exception as e:
+        return f"Error checking MX for {domain}: {e}"
+
+def check_aaaa(domain):
+    try:
+        # Check AAAA records (IPv6 addresses)
+        answers = dns.resolver.resolve(domain, "AAAA")
+        aaaa_records = [rdata.to_text() for rdata in answers]
+        return f"AAAA records: {aaaa_records}"
+    except dns.resolver.NoAnswer:
+        return "No AAAA records found"
+    except dns.resolver.NXDOMAIN:
+        return f"Domain does not exist: {domain}"
+    except Exception as e:
+        return f"Error checking AAAA for {domain}: {e}"
+
+def check_dns(domain):
+    print(f"\nChecking DNS records for domain: {domain}")
+    
+    spf_result = check_spf(domain)
+    if spf_result:
+        print(f"SPF records found: {spf_result}")
+    else:
+        print("No SPF records found")
+    
+    mx_result = check_mx(domain)
+    print(mx_result)
+    
+    aaaa_result = check_aaaa(domain)
+    print(aaaa_result)
+
+    return spf_result, mx_result, aaaa_result
+
+# def generate_subdomains(domain):
+#     # Generate a list of possible subdomains (you can extend this list based on your needs)
+#     subdomains = [
+#         f"www.{domain}",
+#         f"mail.{domain}",
+#         f"blog.{domain}",
+#         f"shop.{domain}",
+#         f"dev.{domain}",
+#         f"api.{domain}"
+#     ]
+#     return subdomains
+
+def check_group(domains):
+    spf_plus_all = []
+    spf_question_all = []
+    spf_other = []
+
+    dns_results = []
+
+    for domain in domains:
+        try:
+            spf_result, mx_result, aaaa_result = check_dns(domain)
+            
+            # Categorize SPF results
+            if spf_result:
+                if "+all" in " ".join(spf_result):
+                    spf_plus_all.append(domain)
+                elif "?all" in " ".join(spf_result):
+                    spf_question_all.append(domain)
+                else:
+                    spf_other.append(domain)
+            
+            # Append DNS results to the list for file writing
+            dns_results.append(f"Domain: {domain}")
+            dns_results.append(f"SPF: {spf_result if spf_result else 'No SPF records found'}")
+            dns_results.append(f"MX: {mx_result}")
+            dns_results.append(f"AAAA: {aaaa_result}")
+            dns_results.append("\n" + "-"*50 + "\n")
+
+
+
+        except Exception as e:
+            dns_results.append(f"Error checking domain {domain}: {e}")
+            continue  # Skip to the next domain
+
+    # Write categorized SPF results to files
+    with open("spf_plus_all.txt", "w") as f_plus_all:
+        f_plus_all.write("\n".join(spf_plus_all))
+    
+    with open("spf_question_all.txt", "w") as f_question_all:
+        f_question_all.write("\n".join(spf_question_all))
+    
+    with open("spf_other.txt", "w") as f_other:
+        f_other.write("\n".join(spf_other))
+
+    # Write detailed DNS results (main domains and subdomains) to a file
+    with open("dns_results.txt", "w") as f_dns:
+        f_dns.write("\n".join(dns_results))
+
+if __name__ == "__main__":
+    # Take multiple domains as input, separated by commas
+    input_domains = input("Enter the domains to check DNS records (e.g., example.com, domain2.com): ").strip()
+    domains = [domain.strip() for domain in input_domains.split(",")]
+
+    # Call the function to check DNS records for each domain and subdomain
+    check_group(domains)

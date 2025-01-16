@@ -21,7 +21,7 @@
 
 2. Navigate to the project directory:
    ```bash
-   cd DNSInspect
+   cd DomainDNSCheck
    ```
 
 3. Install dependencies:

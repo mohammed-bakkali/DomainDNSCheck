@@ -79,19 +79,6 @@ AAAA: AAAA records: ['2606:4700:3033::ac43:abcd']
 --------------------------------------------------
 ```
 
----
-
-## Customization
-
-To extend the tool or add new DNS record types, modify the respective functions:
-- `check_spf(domain)`
-- `check_mx(domain)`
-- `check_aaaa(domain)`
-
-Add additional DNS record checks as needed!
-
----
-
 ## Dependencies
 
 - Python 3.x

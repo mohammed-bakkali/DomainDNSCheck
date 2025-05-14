@@ -1,6 +1,6 @@
 # DNS Tools Suite
 
-**DomainDNSCheck** A collection of Python scripts to inspect and analyze DNS records and discover domain names based on extensions.
+ A collection of Python scripts to inspect and analyze DNS records and discover domain names based on extensions.
 
 ## Features
 

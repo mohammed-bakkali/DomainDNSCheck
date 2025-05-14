@@ -1,14 +1,13 @@
-# DomainDNSCheck
+# DNS Tools Suite
 
-**DomainDNSCheck** is a Python tool designed to inspect DNS records for domains, including SPF, MX, and AAAA records. It categorizes SPF records and generates detailed reports to streamline DNS analysis.
+**DomainDNSCheck** A collection of Python scripts to inspect and analyze DNS records and discover domain names based on extensions.
 
 ## Features
 
-- **SPF Record Inspection**: Checks SPF records and categorizes domains based on SPF rules (`+all`, `?all`, etc.).
-- **MX Record Check**: Retrieves and displays MX records for the domains.
-- **AAAA Record Check**: Inspects IPv6 (AAAA) records.
-- **Detailed Reporting**: Outputs categorized SPF results and DNS details into organized text files.
-- **Bulk Domain Processing**: Supports input of multiple domains for batch processing.
+- Check SPF, MX, and AAAA DNS records for any domain.
+- Categorize SPF configurations (`+all`, `?all`, etc).
+- Search and validate domain names based on TLD extensions.
+- Export results to text files for easy reference.
 
 ---
 
@@ -16,17 +15,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/mohammed-bakkali/DomainDNSCheck.git
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd DomainDNSCheck
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install dnspython
+   git clone https://github.com/mohammed-bakkali/dns-tools-suite.git
    ```
 
 ---
